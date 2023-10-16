@@ -1,7 +1,8 @@
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
+import Notiflix from 'notiflix';
 
-const elements = {
+const refs = {
 calendar: document.querySelector('#datetime-picker'),
 startBtn: document.querySelector('button[data-start]'),
 data: document.querySelector('[data-days]'),
@@ -10,35 +11,31 @@ minutes: document.querySelector('[data-minutes]'),
 seconds: document.querySelector('[data-seconds]')
 };
 
+refs.startBtn.addEventListener('click', startTimer);
+
 let intervalId = null;
 let selectedDate = null;
-let currentDate = null;
-let differenceDate = 0;
 
-elements.startBtn.addEventListener('click', startTimer);
-elements.startBtn.disabled = true;
+refs.startBtn.disabled = true;
 
-const datePicker = flatpickr(elements.calendar, {
-    enableTime: true,
-    time_24hr: true,
-    defaultDate: new Date(),
-    minuteIncrement: 1,
-    onClose(selectedDates) {
-      selectedDate = selectedDates[0].getTime();
-      currentDate = Date.now();
-      if (selectedDate <= currentDate) {
-        window.alert ("Please choose a date in the future");
-        elements.startBtn.disabled = true;
-      } else {
-        elements.startBtn.disabled = false;
-        // const startTimer = () => {
-        //   selectedDate = selectedDates[0].getTime();
-        //   counter.start();
-        // };
-        // elements.startBtn.addEventListener('click', startTimer)
-      }
+const options = {
+  enableTime: true,
+  time_24hr: true,
+  defaultDate: new Date(),
+  minuteIncrement: 1,
+  onClose(selectedDates) {
+    selectedDate = selectedDates[0].getTime();
+    currentDate = Date.now();
+    if (selectedDate <= currentDate) {
+      Notiflix.Notify.failure("Please choose a date in the future");
+      refs.startBtn.disabled = true;
+    } else {
+      refs.startBtn.disabled = false;
     }
-});
+  }
+}
+
+flatpickr(refs.calendar, options);
 
 function startTimer() {
   counter.start();
@@ -47,18 +44,18 @@ function startTimer() {
 const counter = {
   start() {
   intervalId = setInterval (() => {
-  currentDate = new Date();
-  //const localTime = currentDate.toLocaleTimeString("uk-Ua");
-  //const hours = currentDate.getHours();
-  //const minutes = currentDate.getMinutes();
-  //const seconds = currentDate.getSeconds();
-  differenceDate = selectedDate - currentDate;
-  convertMs(differenceDate);
-
-  if (differenceDate <= 0) {
-    this.stop();
-    elements.startBtn.disabled = false;
+  const currentDate = Date.now();
+  const difference = selectedDate - currentDate;
+  refs.startBtn.disabled = true;
+  const { days, hours, minutes, seconds } = convertMs(difference);
+  refs.seconds.textContent = seconds;
+  refs.minutes.textContent = minutes;
+  refs.hours.textContent = hours;
+  refs.data.textContent = days;
+  if (difference <= 1000) {
+    refs.startBtn.disabled = false;
     clearInterval(intervalId);
+    Notiflix.Notify.success('Timer is over')
   }
   }, 1000)
 }
@@ -83,6 +80,6 @@ function convertMs(ms) {
   return { days, hours, minutes, seconds };
 }
 
-//  addLeadingZero(value) {
-//   return String(value).padStart(2, '0');
-//  }
+function addLeadingZero(value) {
+return String(value).padStart(2, '0');
+}
