@@ -7,7 +7,7 @@ stopBtn: document.querySelector('button[data-stop]'),
 elements.startBtn.addEventListener('click', handlerStart);
 elements.stopBtn.addEventListener('click', handlerStop);
 
-
+let idColor = null;
 
 function getRandomHexColor() {
     return `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, 0)}`;
@@ -25,6 +25,5 @@ function getRandomHexColor() {
 function handlerStop() {
     elements.startBtn.disabled = false;
     elements.stopBtn.disabled = true;
-   // elements.body.style.backgroundColor = 'transparent';
-   clearInterval(idColor);
+    clearInterval(idColor);
 }
