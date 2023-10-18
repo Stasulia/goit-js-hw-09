@@ -48,6 +48,11 @@ const counter = {
   const difference = selectedDate - currentDate;
   refs.startBtn.disabled = true;
   updateCounter(convertMs(difference));
+  // const { days, hours, minutes, seconds } = convertMs(difference);
+  // refs.seconds.textContent = seconds;
+  // refs.minutes.textContent = minutes;
+  // refs.hours.textContent = hours;
+  // refs.data.textContent = days;
   if (difference <= 1000) {
     refs.startBtn.disabled = false;
     clearInterval(intervalId);
@@ -72,15 +77,15 @@ function convertMs(ms) {
   const minutes = addLeadingZero(Math.floor(((ms % day) % hour) / minute));
   // Remaining seconds
   const seconds = addLeadingZero(Math.floor((((ms % day) % hour) % minute) / second));
-  //updateCounter ({days, hours, minutes, seconds});
-  return { days, hours, minutes, seconds };
+  updateCounter ({days, hours, minutes, seconds});
+  //return { days, hours, minutes, seconds };
 }
 
 function updateCounter ({days, hours, minutes, seconds}) {
-  refs.seconds.textContent = `${seconds}`;
-  refs.minutes.textContent = `${minutes}`;
-  refs.hours.textContent = `${hours}`;
-  refs.data.textContent = `${days}`;
+  refs.seconds.textContent = seconds;
+  refs.minutes.textContent = minutes;
+  refs.hours.textContent = hours;
+  refs.data.textContent = days;
 }
 
 function addLeadingZero(value) {

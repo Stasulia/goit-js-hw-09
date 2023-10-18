@@ -8,15 +8,13 @@ refs.startBtn.addEventListener('click', handlerStart);
 refs.stopBtn.addEventListener('click', handlerStop);
 
 let idColor = null;
-isDisabled = true;
 
 function getRandomHexColor() {
     return `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, 0)}`;
   }
 
   function handlerStart() {
-    refs.startBtn = isDisabled;
-    refs.stopBtn = !isDisabled;
+    toggleBtnState (true, false);
     idColor = setInterval(() => {
     const color = getRandomHexColor();
     refs.body.style.backgroundColor = color;
@@ -24,7 +22,11 @@ function getRandomHexColor() {
 }
 
 function handlerStop() {
-    refs.startBtn = !isDisabled;
-    refs.stopBtn = isDisabled;
+    toggleBtnState (false, true);
     clearInterval(idColor);
+}
+
+function toggleBtnState(startDisabled, stopDisabled) {
+  refs.startBtn.disabled = startDisabled;
+  refs.stopBtn.disabled = stopDisabled;
 }
